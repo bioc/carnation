@@ -510,6 +510,10 @@ scatterPlotServer <- function(id, obj, plot_args, gene_scratchpad, reset_genes, 
       }, {
 
         req(app_object()$res)
+        validate(
+          need(all(c(input$x_axis_comp, input$y_axis_comp) %in% names(app_object()$res)),
+               'Waiting for data')
+        )
 
         res_i <- as.data.frame(app_object()$res[[input$x_axis_comp]])
         res_j <- as.data.frame(app_object()$res[[input$y_axis_comp]])
