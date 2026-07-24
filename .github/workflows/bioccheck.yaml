@@ -10,7 +10,7 @@ name: bioccheck
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "devel" ]
   pull_request:
     types:
       - opened
