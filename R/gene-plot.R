@@ -443,7 +443,24 @@ genePlotServer <- function(id, obj,
             updateSelectizeInput(session, 'xvar',
                                  choices=int.cols,
                                  selected=input$xvar)
+            selected <- input$xvar
         }
+
+        # get initial x-axis labels
+        xvar <- gene_coldata()[, selected]
+
+        # if factor, use existing levels
+        # if numeric, sort ascending
+        # else, use unique values
+        if(is.factor(xvar)){
+          xchoices$all <- levels(xvar)
+        } else if(is.numeric(xvar)){
+          lvls <- unique(xvar)
+          xchoices$all <- lvls[order(lvls)]
+        } else {
+          xchoices$all <- unique(xvar)
+        }
+        xchoices$current <- xchoices$all
 
         # update color choices
         if(is.null(input$color) || !(input$color %in% c(int.cols, 'sample', 'gene'))){
