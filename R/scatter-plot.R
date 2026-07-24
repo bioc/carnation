@@ -407,8 +407,16 @@ scatterPlotServer <- function(id, obj, plot_args, gene_scratchpad, reset_genes, 
         }
         updateSelectizeInput(session, 'y_axis_comp', choices = comp_all(), selected = available_y)
 
+        # reset cache
         df_react(NULL)
         df_full(NULL)
+        plot_source(NULL)
+        axis_limits$lim.x <- NULL
+        axis_limits$lim.y <- NULL
+        genes_clicked$g <- NULL
+        selected_genes$g <- NULL
+        filter_tbl_by_sel_genes(FALSE)
+
       })
       # -------------------------------------------------------------- #
 
