@@ -264,6 +264,15 @@ genePlotUI <- function(id, panel){
             ), # fluidRow
 
             fluidRow(
+              column(4, h5('box position')),
+              column(8, align='left',
+                selectInput(ns('box_dodge'), label=NULL,
+                  choices=c('dodge', 'identity'),
+                  selected='identity'
+                ) # selectInput
+              ) # column
+            ), # fluidRow
+            fluidRow(
               column(4, h5('legend')),
               column(8, align='left',
                 selectInput(ns('legend'), label=NULL,
@@ -872,6 +881,7 @@ genePlotServer <- function(id, obj,
         ylab <- config()$server$de_analysis$gene_plot$y_labels
         boxes <- as.logical(input$boxes)
         ht <- config()$ui$de_analysis$gene_plot$height
+        box_dodge <- input$box_dodge
 
         if(logy){
           validate(
@@ -950,7 +960,7 @@ genePlotServer <- function(id, obj,
                      color=color, ymax=ymax, ymin=ymin,
                      factor.levels=x_order, rotate_x_labels=rotate_x_labels,
                      nrow=gene_nrow, trendline=trendline,
-                     facet=facet, legend=legend, boxes=boxes)
+                     facet=facet, legend=legend, boxes=boxes, box_dodge=box_dodge)
 
         if(input$txt_scale == 0 | is.na(input$txt_scale)){
           txt_scale <- 1

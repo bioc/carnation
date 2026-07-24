@@ -575,6 +575,7 @@ get_gene_counts <- function (dds,
 #' @param legend show legend?
 #' @param boxes show boxes?
 #' @param rotate_x_labels angle to rotate x-axis labels (default=30)
+#' @param box_dodge box position if enabled, can be 'identity' (default) or 'dodge'
 #'
 #' @return ggplot handle
 #'
@@ -595,7 +596,7 @@ get_gene_counts <- function (dds,
 #' @export
 getcountplot <- function(df, intgroup='group', factor.levels, title=NULL,
                          ylab='Normalized counts', color='gene', nrow=2, ymin=NULL, ymax=NULL,
-                         log=TRUE, freey=FALSE, trendline='smooth', facet=NULL, legend=TRUE, boxes=TRUE, rotate_x_labels=30){
+                         log=TRUE, freey=FALSE, trendline='smooth', facet=NULL, legend=TRUE, boxes=TRUE, rotate_x_labels=30, box_dodge='identity'){
   idx <- df[,intgroup] %in% factor.levels
 
   df <- df[idx,]
@@ -617,9 +618,10 @@ getcountplot <- function(df, intgroup='group', factor.levels, title=NULL,
     geom_point(position=position_jitterdodge(dodge.width=0.2),
                  size=2, alpha=0.5)
 
-  if(boxes)
-    p <- p + geom_boxplot(alpha=0, notch=TRUE,
-                          outlier.size=0, outlier.shape=NA)
+  if(boxes){
+      p <- p + geom_boxplot(alpha=0, notch=FALSE, position=box_dodge,
+                            outlier.size=0, outlier.shape=NA)
+  }
 
   p <- p +
     theme_bw() + ylab(ylab) + xlab('') +
