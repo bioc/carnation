@@ -1123,7 +1123,21 @@ run_carnation <- function(credentials=NULL, passphrase=NULL, enable_admin=TRUE,
       )
 
       # load data from RDS object
-      obj <- readRDS(input$assay)
+      obj <- tryCatch(
+               readRDS(input$assay),
+               error = function(e){ e })
+
+      if(inherits(obj, 'error')){
+        showNotification(
+          paste0('Error reading object:', obj$message, '. Reload carnation and try again'),
+          type = 'error'
+        )
+      }
+
+      validate(
+        need(!inherits(obj, 'error'), 'Error reading object')
+      )
+
       original$obj <- obj
       original$path <- input$assay
 
