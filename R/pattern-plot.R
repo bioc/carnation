@@ -566,6 +566,7 @@ patternPlotServer <- function(id,
                               'deg_time',
                               choices=time,
                               selected=input$deg_time)
+            sel_time <- input$deg_time
         } else {
             updateSelectInput(session,
                               'deg_time',
@@ -600,6 +601,23 @@ patternPlotServer <- function(id,
         updateSelectizeInput(session, 'facet_var_levels',
                              choices=facet_levels,
                              selected=facet_levels)
+
+        # set initial xaxis levels
+        ctime <- cdata[,sel_time]
+
+        # if factor, use existing levels
+        # if numeric, sort ascending
+        # else, use unique values
+        if(is.factor(ctime)){
+          xchoices$all <- levels(ctime)
+        } else if(is.numeric(ctime)){
+          lvls <- unique(ctime)
+          xchoices$all <- lvls[order(lvls)]
+        } else {
+          xchoices$all <- unique(ctime)
+        }
+        xchoices$current <- xchoices$all
+
         # save degplot data
         deg_plot_data$obj <- obj
 
