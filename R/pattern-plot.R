@@ -629,7 +629,6 @@ patternPlotServer <- function(id,
       # observer to update facet var levels
       # when facet var, coldata updated or facet var reset
       observeEvent(c(input$deg_facet,
-                     deg_plot_data$obj,
                      input$deg_minc,
                      input$deg_facet_all), {
         validate(
