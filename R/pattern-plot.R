@@ -404,6 +404,7 @@ patternPlotServer <- function(id,
 
       current_facet_levels <- reactiveValues(l=NULL)
       genes_clicked <- reactiveValues(g=NULL)
+      data_loaded <- reactiveVal(FALSE)
 
       # update from reactive config
       observeEvent(config(), {
@@ -448,6 +449,9 @@ patternPlotServer <- function(id,
                           'deg_color',
                           choices='',
                           selected='')
+
+        # set loaded flag to TRUE
+        data_loaded(FALSE)
       }
 
       # when obj is loaded, reset data and set dp_analysis to first option
@@ -599,6 +603,9 @@ patternPlotServer <- function(id,
         # save degplot data
         deg_plot_data$obj <- obj
 
+        # this is set to TRUE, so it only triggers on *first* load
+        # and not on subsequent updates
+        data_loaded(TRUE)
       }, ignoreNULL=FALSE) # observeEvent get degplot data
 
       observeEvent(c(input$deg_cluster, deg_plot_data$obj,
@@ -749,7 +756,7 @@ patternPlotServer <- function(id,
       ############################################################
 
       # reactive to make degPatterns plot
-      degplot <- eventReactive(c(deg_plot_data$obj, input$plot_do), {
+      degplot <- eventReactive(c(data_loaded(), input$plot_do), {
 
         validate(
             need(!is.null(deg_plot_data$obj),
