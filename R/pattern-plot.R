@@ -413,22 +413,8 @@ patternPlotServer <- function(id,
                            value=config()$ui$pattern_analysis$x_rotate)
       })
 
-      observeEvent(pattern_obj(), {
-        obj <- pattern_obj()
-
-        if(is.null(names(obj))){
-          updateSelectizeInput(session,
-                               'dp_analysis',
-                               choices=c(''),
-                               selected=c(''))
-        } else {
-          updateSelectizeInput(session,
-                               'dp_analysis',
-                               choices=names(obj),
-                               selected=names(obj)[1])
-        }
-
-        # reset reactive values & menus on initial load
+      # function to reset module data
+      reset_data <- function(){
         deg_plot_data$obj <- NULL
         xchoices$all <- NULL
         xchoices$current <- NULL
@@ -462,6 +448,26 @@ patternPlotServer <- function(id,
                           'deg_color',
                           choices='',
                           selected='')
+      }
+
+      # when obj is loaded, reset data and set dp_analysis to first option
+      observeEvent(pattern_obj(), {
+        # reset reactive values & menus on initial load
+        reset_data()
+        obj <- pattern_obj()
+
+        if(is.null(names(obj))){
+          updateSelectizeInput(session,
+                               'dp_analysis',
+                               choices=c(''),
+                               selected=c(''))
+        } else {
+          updateSelectizeInput(session,
+                               'dp_analysis',
+                               choices=names(obj),
+                               selected=names(obj)[1])
+        }
+
       }, ignoreNULL=FALSE)
 
       # update upset intersections menu
