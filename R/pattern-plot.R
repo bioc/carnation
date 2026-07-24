@@ -582,6 +582,20 @@ patternPlotServer <- function(id,
                               selected=all.colors[1])
         }
 
+        # get cluster sizes
+        nodup.idx <- !duplicated(obj$genes)
+        cluster.sizes <- table(obj[nodup.idx, cluster_selected])
+
+        # if input is NA, set to 1
+        if(!is.na(input$deg_minc) & all(cluster.sizes < input$deg_minc)){
+          facet_levels <- NULL
+        } else {
+          facet_levels <- names(cluster.sizes)[cluster.sizes > input$deg_minc]
+        }
+
+        updateSelectizeInput(session, 'facet_var_levels',
+                             choices=facet_levels,
+                             selected=facet_levels)
         # save degplot data
         deg_plot_data$obj <- obj
 
