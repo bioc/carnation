@@ -76,7 +76,7 @@ genePlotUI <- function(id, panel){
       tagList(
 
         fluidRow(
-          column(6, strong('Plot options')),
+          column(6, strong('Sample options')),
           column(6, align='right',
             helpButtonUI(ns('geneplt_opts_help'))
           ) # column
@@ -92,11 +92,34 @@ genePlotUI <- function(id, panel){
         ), # fluidRow
 
         fluidRow(
+          column(4, h5('normalization')),
+          column(8,
+            selectInput(ns('norm_method'), label=NULL,
+              choices=unlist(config$ui$de_analysis$gene_plot$norm_method)
+            ) # selectInput
+          ) # column
+        ), # fluidRow
+
+        fluidRow(
+          column(12, strong('Plot options'))
+        ), # fluidRow
+
+        fluidRow(
           column(4, h5('x-axis variable')),
           column(8,
             selectInput(ns('xvar'), label=NULL,
                         choices=NULL
             ) # selectInput
+          ) # column
+        ), # fluidRow
+
+        fluidRow(
+          column(4, h5('color by')),
+          column(8,
+            selectizeInput(ns('color'), label=NULL,
+                           choices=NULL,
+                           selected=NULL
+            ) # selectizeInput
           ) # column
         ), # fluidRow
 
@@ -111,12 +134,12 @@ genePlotUI <- function(id, panel){
         ), # fluidRow
 
         fluidRow(
-          column(4, h5('color by')),
-          column(8,
-            selectizeInput(ns('color'), label=NULL,
-                           choices=NULL,
-                           selected=NULL
-            ) # selectizeInput
+          column(4, h5('free y axes')),
+          column(8, align='left',
+            selectInput(ns('freey'), label=NULL,
+              choices=c(TRUE, FALSE),
+              selected=config$ui$de_analysis$gene_plot$freey
+            ) # selectInput
           ) # column
         ), # fluidRow
 
@@ -178,20 +201,13 @@ genePlotUI <- function(id, panel){
             fluidRow(
               column(4, h5('log scale')),
               column(8, align='left',
-                checkboxInput(ns('logy'), label=NULL,
-                  value=config$ui$de_analysis$gene_plot$logy
-                ) # checkboxInput
-              ) # column
-            ), # fluidRow
-
-            fluidRow(
-              column(4, h5('free y axes')),
-              column(8, align='left',
-                checkboxInput(ns('freey'), label=NULL,
-                  value=config$ui$de_analysis$gene_plot$freey
-                ) # checkboxInput
+                selectInput(ns('logy'), label=NULL,
+                  choices=c(TRUE, FALSE),
+                  selected=config$ui$de_analysis$gene_plot$logy
+                ) # selectInput
               ) # column
             ) # fluidRow
+
           ), # bsCollapsePanel
 
           bsCollapsePanel('facet settings',
@@ -229,15 +245,6 @@ genePlotUI <- function(id, panel){
           bsCollapsePanel('More options',
 
             fluidRow(
-              column(4, h5('normalization')),
-              column(8,
-                selectInput(ns('norm_method'), label=NULL,
-                  choices=unlist(config$ui$de_analysis$gene_plot$norm_method)
-                ) # selectInput
-              ) # column
-            ), # fluidRow
-
-            fluidRow(
               column(4, h5('trendline')),
               column(8, align='left',
                 selectInput(ns('trendline'), label=NULL,
@@ -249,18 +256,20 @@ genePlotUI <- function(id, panel){
             fluidRow(
               column(4, h5('boxes')),
               column(8, align='left',
-                checkboxInput(ns('boxes'), label=NULL,
-                  value=config$ui$de_analysis$gene_plot$boxes
-                ) # checkboxInput
+                selectInput(ns('boxes'), label=NULL,
+                  choices=c(TRUE, FALSE),
+                  selected=config$ui$de_analysis$gene_plot$boxes
+                ) # selectInput
               ) # column
             ), # fluidRow
 
             fluidRow(
               column(4, h5('legend')),
               column(8, align='left',
-                checkboxInput(ns('legend'), label=NULL,
-                  value=config$ui$de_analysis$gene_plot$legend
-                ) # checkboxInput
+                selectInput(ns('legend'), label=NULL,
+                  choices=c(TRUE, FALSE),
+                  selected=config$ui$de_analysis$gene_plot$legend
+                ) # selectInput
               ) # column
             ), # fluidRow
 
@@ -351,10 +360,10 @@ genePlotServer <- function(id, obj,
         updateNumericInput(session, 'x_rotate',
                            value=config()$ui$de_analysis$gene_plot$x_rotate)
 
-        # update checkbox inputs
+        # update select inputs
         for(name in c('logy', 'freey', 'boxes', 'legend')){
-          updateCheckboxInput(session, name,
-                              value=config()$ui$de_analysis$gene_plot[[ name ]])
+          updateSelectInput(session, name,
+                            selected=config()$ui$de_analysis$gene_plot[[ name ]])
         }
       })
 
@@ -833,18 +842,18 @@ genePlotServer <- function(id, obj,
         }
 
         # gather params for gene plot
-        logy <- input$logy
-        freey <- input$freey
+        logy <- as.logical(input$logy)
+        freey <- as.logical(input$freey)
         rotate_x_labels <- input$x_rotate
         color <- input$color
         trendline <- input$trendline
         xvar <- input$xvar
         gene_nrow <- config()$ui$de_analysis$gene_plot$nrow
-        legend <- input$legend
+        legend <- as.logical(input$legend)
         ymax <- input$ymax
         ymin <- input$ymin
         ylab <- config()$server$de_analysis$gene_plot$y_labels
-        boxes <- input$boxes
+        boxes <- as.logical(input$boxes)
         ht <- config()$ui$de_analysis$gene_plot$height
 
         if(logy){
