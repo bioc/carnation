@@ -2191,9 +2191,9 @@ summarize_res_list <- function(res.list, dds.list, dds_mapping, alpha, lfc.thres
     for (name in names(res.list)){
         x <- my.summary(res.list[[name]], dds.list[[ dds_mapping[[name]] ]], alpha, lfc.thresh)
         if(!is.null(labels)){
-            slist[[name]] <- cbind('comparison'=name, 'description'=labels[[name]], x)
+            slist[[name]] <- cbind('comparison'=name, 'description'=labels[[name]], dds_object=dds_mapping[[name]], x)
         } else {
-            slist[[name]] <- cbind('comparison'=name, x)
+            slist[[name]] <- cbind('comparison'=name, dds_object=dds_mapping[[name]], x)
         }
     }
     slist <- do.call(rbind, slist)
