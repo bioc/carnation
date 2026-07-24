@@ -64,8 +64,8 @@ run_carnation <- function(credentials=NULL, passphrase=NULL, enable_admin=TRUE,
     titlePanel(
       fluidRow(
         # add spacer to center heading
-        column(4, span()),
-        column(4,
+        column(2, span()),
+        column(8,
           tags$div(
             HTML(
               paste0(
@@ -78,12 +78,12 @@ run_carnation <- function(credentials=NULL, passphrase=NULL, enable_admin=TRUE,
           align='center',
           style='font-family: Helvetica; font-size: 40px;'
         ), # column
-        column(2,
+        column(1,
           actionButton('intro', label='Take a tour!',
                        icon=icon('info'))
         ), # column
 
-        column(2,
+        column(1,
           introBox(
             saveUI('save_object'),
             data.step=11,
