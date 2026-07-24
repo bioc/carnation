@@ -300,7 +300,9 @@ scatterPlotUI <- function(id, panel){
               fluidRow(style='margin-left: 2px;',
                 uiOutput(ns('pt_selected')),
                 actionButton(ns('filter_sel_do'),
-                             label='Show/Hide in table'),
+                             label='Show in table'),
+                actionButton(ns('filter_sel_reset_do'),
+                             label='Reset'),
                 actionButton(ns('reset_plt_selection'),
                                 'Clear',
                                 class='btn-primary')
@@ -956,10 +958,23 @@ scatterPlotServer <- function(id, obj, plot_args, gene_scratchpad, reset_genes, 
 
       observeEvent(input$reset_plt_selection, {
         selected_genes$g <- NULL
+        filter_tbl_by_sel_genes(FALSE)
       })
 
       observeEvent(input$filter_sel_do, {
-        filter_tbl_by_sel_genes(!filter_tbl_by_sel_genes())
+        # only set this if some genes selected
+        sel_genes <- unique(unlist(selected_genes$g))
+        if(length(sel_genes) > 0){
+          filter_tbl_by_sel_genes(TRUE)
+        } else {
+          showNotification(
+            'No genes selected, not filtering table', type='warning'
+          )
+        }
+      })
+
+      observeEvent(input$filter_sel_reset_do, {
+        filter_tbl_by_sel_genes(FALSE)
       })
 
       # ------------------------------------------------------- #
