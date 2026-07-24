@@ -430,7 +430,8 @@ run_carnation <- function(credentials=NULL, passphrase=NULL, enable_admin=TRUE,
               column(2,
                 introBox(
                   selectInput('data_type', label='Type of data',
-                              choices=c('Existing', 'New', 'Edit')),
+                              choices=c('Existing', 'New', 'Edit'),
+                              width="100%"),
                   data.step=1,
                   data.intro='Choose whether you want to load an existing project, create a new one, or edit the currently loaded object.'
                 ),
