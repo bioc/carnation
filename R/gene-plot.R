@@ -980,7 +980,14 @@ genePlotServer <- function(id, obj,
 
         gene_plot_data$handle <- p
 
-        ggplotly(p, height=ht)
+
+        if(all(as.integer(names(grp_sizes)) >= 2) & boxes & box_dodge == "dodge"){
+          p2 <- ggplotly(p, height=ht) %>% layout(boxmode = "group")
+        } else {
+          p2 <- ggplotly(p, height=ht)
+        }
+        p2
+
       }) # eventReactive normplot
 
       output$normplot <- renderPlotly({
