@@ -954,7 +954,6 @@ genePlotServer <- function(id, obj,
           need(pts_inside > 0, 'No points within y-axis limits. Please adjust limits in "y-axis settings" or click "Autoscale"')
         )
 
-        # if more than 2 faceting variables are specified
         p <- getcountplot(df, intgroup=xvar, ylab=ylab,
                      log=logy, freey=freey,
                      color=color, ymax=ymax, ymin=ymin,
