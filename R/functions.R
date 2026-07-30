@@ -614,7 +614,7 @@ getcountplot <- function(df, intgroup='group', factor.levels, title=NULL,
   ymin <- ifelse(is.null(ymin), min(df$count), ymin)
   ymax <- ifelse(is.null(ymax), max(df$count), ymax)
 
-  p <- ggplot(df, aes(y=.data$count, x=.data[[ intgroup ]], color=.data[[ color ]], text=paste('sample:', .data$sample))) +
+  p <- ggplot(df, aes(y=.data$count, x=.data[[ intgroup ]], color=.data[[ color ]])) +
     geom_point(position=position_jitterdodge(dodge.width=0.2),
                  size=2, alpha=0.5)
 
@@ -660,6 +660,9 @@ getcountplot <- function(df, intgroup='group', factor.levels, title=NULL,
     if(length(facet) == 1) p <- p + facet_wrap(as.formula(paste('~', facet)), nrow=nrow, scales=scales)
     else p <- p + facet_wrap(as.formula(paste('~', paste(facet, collapse=' + '))), nrow=nrow, scales=scales)
   }
+
+  # add text aesthetic
+  p <- p + aes(text=paste('sample:', .data$sample))
 
   if(!legend) p <- p + theme(legend.position='none')
   p <- p + theme(axis.text.x=element_text(size=12),
